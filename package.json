@@ -1,0 +1,37 @@
+{
+  "name": "ecgvisualisation",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . ext ts,tsx reportunuseddisabledirectives maxwarnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.10",
+    "@tanstack/reactquery": "^4.35.3",
+    "axios": "^1.5.0",
+    "chart.js": "^4.4.0",
+    "intersectionobserver": "^0.12.2",
+    "papaparse": "^5.4.1",
+    "react": "^18.2.0",
+    "reactchartjs2": "^5.2.0",
+    "reactdom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/papaparse": "^5.3.8",
+    "@types/react": "^18.2.15",
+    "@types/reactdom": "^18.2.7",
+    "@typescripteslint/eslintplugin": "^6.0.0",
+    "@typescripteslint/parser": "^6.0.0",
+    "@vitejs/pluginreact": "^4.0.3",
+    "eslint": "^8.45.0",
+    "eslintpluginreacthooks": "^4.6.0",
+    "eslintpluginreactrefresh": "^0.4.3",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5"
+  }
+}
