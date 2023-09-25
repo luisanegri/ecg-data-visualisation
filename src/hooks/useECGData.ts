@@ -2,6 +2,9 @@ import Papa from 'papaparse';
 import { useQuery } from '@tanstack/reactquery';
 import axios from 'axios';
 
+import { UseECGDataReturnType } from '../types/ECGDataTypes';
+import { ECGDataItem } from '../types/ECGDataTypes';
+
 const sampleECGDataPath = '/data/small_data.txt'
 // const ECGDataPath = '/data/142905_data_data.txt'
 
@@ -33,8 +36,8 @@ const fetchData = async (page = 0, limit = 50) => {
     }
 };
 
-const useECGData = (page = 0) => {
-    const { data: ecgData, isLoading, isError, error, isFetching, isPreviousData } = useQuery(['ECGData', page], () => fetchData(page), {
+const useECGData = (page = 0): UseECGDataReturnType => {
+    const { data, isLoading, isError, error, isFetching, isPreviousData } = useQuery(['ECGData', page], () => fetchData(page), {
         keepPreviousData: true,
         onSuccess: () => {
             console.log('Data fetched successfully')
@@ -44,7 +47,15 @@ const useECGData = (page = 0) => {
         }
     });
 
-    return { ecgData: ecgData?.data, isLoading, isError, error, hasMore: ecgData?.hasMore, isFetching, isPreviousData };
+    return {
+        ecgData: data?.data as ECGDataItem[] || null,
+        isLoading,
+        isError,
+        error,
+        hasMore: data?.hasMore || false,
+        isFetching,
+        isPreviousData
+    };
 };
 
 export default useECGData;
