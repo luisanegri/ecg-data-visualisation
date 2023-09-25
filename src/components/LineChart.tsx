@@ -10,7 +10,9 @@ import {
     Legend
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+
 import useECGData from '../hooks/useECGData';
+import { ECGDataItem } from '../types/ECGDataTypes';
 
 ChartJS.register(
     CategoryScale,
@@ -30,11 +32,11 @@ const LineChart = () => {
     if (isError) return <p>Error: {error.message}</p>;
 
     const chartData = {
-        labels: ecgData?.map(item => item.Time),
+        labels: (ecgData as ECGDataItem[])?.map(item => item.Time),
         datasets: [
             {
                 label: 'ECG Data',
-                data: ecgData?.map(item => item['1']),
+                data: ecgData?.map((item: ECGDataItem) => item['1']),
                 borderColor: 'lightgreen',
                 borderWidth: 2,
                 pointRadius: 0,
