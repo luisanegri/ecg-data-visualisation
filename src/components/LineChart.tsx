@@ -1,5 +1,4 @@
-/* eslint-disable react-refresh/only-export-components */
-
+import React, { useState } from 'react';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -12,7 +11,6 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import useECGData from '../hooks/useECGData';
-import React from 'react';
 
 ChartJS.register(
     CategoryScale,
@@ -25,10 +23,11 @@ ChartJS.register(
 );
 
 const LineChart = () => {
-    const { ecgData, isLoading, isError, error } = useECGData();
+    const [page, setPage] = useState(0);
+    const { ecgData, isLoading, isError, error, hasMore, isFetching, isPreviousData } = useECGData(page);
 
     if (isLoading) return <p>Loading...</p>;
-    if (isError) return <p>Error: {error}</p>;
+    if (isError) return <p>Error: {error.message}</p>;
 
     const chartData = {
         labels: ecgData?.map(item => item.Time),
@@ -44,11 +43,31 @@ const LineChart = () => {
     };
 
     return (
-        <Line data={chartData} />
-    )
+        <div>
+            <Line data={chartData} />
+            <div>
+                <button
+                    onClick={() => setPage(prev => Math.max(prev - 1, 0))}
+                    disabled={page === 0}
+                >
+                    Previous
+                </button>
+                <button
+                    onClick={() => {
+                        if (!isPreviousData && hasMore) {
+                            setPage(prev => prev + 1);
+                        }
+                    }}
+                    disabled={isPreviousData || !hasMore}
+                >
+                    Next
+                </button>
+                {isFetching ? <span> Loading...</span> : null}{' '}
+            </div>
+        </div>
+    );
 }
-
 
 const MemoizedLineChart = React.memo(LineChart);
 
-export default React.memo(MemoizedLineChart);
+export default MemoizedLineChart;
