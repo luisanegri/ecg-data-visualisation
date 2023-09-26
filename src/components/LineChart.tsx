@@ -27,10 +27,16 @@ ChartJS.register(
 
 const LineChart = () => {
     const [page, setPage] = useState(0);
+    const [zoomLevel, setZoomLevel] = useState(50);
     const { ecgData, isLoading, isError, error, hasMore, isFetching, isPreviousData } = useECGData(page);
 
-    if (isLoading) return <p>Loading...</p>;
-    if (isError) return <p>Error: {error.message}</p>;
+    const handleZoomIn = () => {
+        setZoomLevel(prev => Math.max(prev - 10, 10));
+    };
+
+    const handleZoomOut = () => {
+        setZoomLevel(prev => prev + 10);
+    };
 
     const chartData = {
         labels: (ecgData as ECGDataItem[])?.map(item => item.Time),
@@ -43,12 +49,51 @@ const LineChart = () => {
                 pointRadius: 0,
             }
         ]
+
     };
+
+    const styles = {
+        container: {
+            marginTop: 30,
+            marginBottom: 30,
+        },
+    };
+
+    if (isLoading) return <p>Loading...</p>;
+    if (isError) return <p>Error: {error.message}</p>;
 
     return (
         <>
-            <Line data={chartData} />
-            <Container maxWidth="sm" style={{ marginTop: 30, marginBottom: 30 }}>
+            <Container maxWidth="xs" style={styles.container}>
+                <Grid
+                    container
+                    justifyContent="center"
+                    alignItems="center"
+                    spacing={2}
+                >
+                    <Button onClick={handleZoomIn} variant="outlined">
+                        Zoom In
+                    </Button>
+                    <Button onClick={handleZoomOut} variant="outlined">
+                        Zoom Out
+                    </Button>
+                </Grid>
+            </Container>
+
+            <Line
+                data={chartData}
+                options={{
+                    scales: {
+                        x: {
+                            ticks: {
+                                maxTicksLimit: zoomLevel
+                            }
+                        }
+                    }
+                }}
+            />
+
+            <Container maxWidth="sm" style={styles.container}>
                 <Grid
                     container
                     justifyContent="center"
@@ -84,6 +129,7 @@ const LineChart = () => {
             </Container>
         </>
     );
+
 }
 
 const MemoizedLineChart = React.memo(LineChart);
