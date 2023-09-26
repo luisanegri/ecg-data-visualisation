@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -29,6 +29,7 @@ ChartJS.register(
 
 const LineChart = () => {
     const [page, setPage] = useState(0);
+    const chartRef = useRef(null);
     const { ecgData, isLoading, isError, error, hasMore, isFetching, isPreviousData } = useECGData(page);
 
     const chartData = {
@@ -47,9 +48,13 @@ const LineChart = () => {
     const chartOptions = {
         plugins: {
             zoom: {
+                pan: {
+                    enabled: true,
+                    mode: 'xy'
+                } as const,
                 zoom: {
                     wheel: {
-                        enabled: true,
+                        enabled: true
                     },
                     pinch: {
                         enabled: true
@@ -67,15 +72,30 @@ const LineChart = () => {
         },
     };
 
+    const handleResetZoom = () => {
+        if (chartRef && chartRef.current) {
+            chartRef.current.resetZoom();
+        }
+    };
+
     if (isLoading) return <p>Loading...</p>;
     if (isError) return <p>Error: {error.message}</p>;
 
     return (
         <>
-            <Line
-                data={chartData}
-                options={chartOptions}
-            />
+            <Container maxWidth='lg'>
+                <Line
+                    data={chartData}
+                    options={chartOptions}
+                    ref={chartRef}
+                />
+
+                <Button onClick={handleResetZoom} variant="outlined">
+                    Reset Zoom
+                </Button>
+            </Container>
+
+
 
             <Container maxWidth="sm" style={styles.container}>
                 <Grid
@@ -119,3 +139,4 @@ const LineChart = () => {
 const MemoizedLineChart = React.memo(LineChart);
 
 export default MemoizedLineChart;
+
