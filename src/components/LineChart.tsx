@@ -13,6 +13,7 @@ import { Line } from 'reactchartjs2';
 
 import useECGData from '../hooks/useECGData';
 import { ECGDataItem } from '../types/ECGDataTypes';
+import { Button, Container } from '@mui/material';
 
 ChartJS.register(
     CategoryScale,
@@ -45,28 +46,30 @@ const LineChart = () => {
     };
 
     return (
-        <div>
+        <>
             <Line data={chartData} />
-            <div>
-                <button
+            <Container maxWidth="sm">
+                <Button
                     onClick={() => setPage(prev => Math.max(prev  1, 0))}
                     disabled={page === 0}
+                    variant="outlined"
                 >
                     Previous
-                </button>
-                <button
+                </Button>
+                <Button
                     onClick={() => {
                         if (!isPreviousData && hasMore) {
                             setPage(prev => prev + 1);
                         }
                     }}
                     disabled={isPreviousData || !hasMore}
+                    variant="contained"
                 >
                     Next
-                </button>
+                </Button>
                 {isFetching ? <span> Loading...</span> : null}{' '}
-            </div>
-        </div>
+            </Container>
+        </>
     );
 }
 
