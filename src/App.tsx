@@ -3,19 +3,19 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/reactquery'
+import TopBar from "./components/TopBar";
+import ThemeProvider from "./contexts/ThemeProvider";
 
 const queryClient = new QueryClient()
 
 function App() {
   return (
-    <div className="App">
-      <header>
-        <h1>IoT ECG data visualisation</h1>
-      </header>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <TopBar />
         <LineChart />
-      </QueryClientProvider>
-    </div>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 
