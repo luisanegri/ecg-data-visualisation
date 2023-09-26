@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -10,10 +10,11 @@ import {
     Legend
 } from 'chart.js';
 import { Line } from 'reactchartjs2';
+import zoomPlugin from 'chartjspluginzoom';
+import { Button, Container, Grid } from '@mui/material';
 
 import useECGData from '../hooks/useECGData';
 import { ECGDataItem } from '../types/ECGDataTypes';
-import { Button, Container, Grid } from '@mui/material';
 
 ChartJS.register(
     CategoryScale,
@@ -22,15 +23,14 @@ ChartJS.register(
     LineElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    zoomPlugin
 );
 
 const LineChart = () => {
     const [page, setPage] = useState(0);
+    const chartRef = useRef(null);
     const { ecgData, isLoading, isError, error, hasMore, isFetching, isPreviousData } = useECGData(page);
-
-    if (isLoading) return <p>Loading...</p>;
-    if (isError) return <p>Error: {error.message}</p>;
 
     const chartData = {
         labels: (ecgData as ECGDataItem[])?.map(item => item.Time),
@@ -45,10 +45,59 @@ const LineChart = () => {
         ]
     };
 
+    const chartOptions = {
+        plugins: {
+            zoom: {
+                pan: {
+                    enabled: true,
+                    mode: 'xy'
+                } as const,
+                zoom: {
+                    wheel: {
+                        enabled: true
+                    },
+                    pinch: {
+                        enabled: true
+                    },
+                    mode: 'xy'
+                } as const
+            }
+        }
+    };
+
+    const styles = {
+        container: {
+            marginTop: 30,
+            marginBottom: 30,
+        },
+    };
+
+    const handleResetZoom = () => {
+        if (chartRef && chartRef.current) {
+            chartRef.current.resetZoom();
+        }
+    };
+
+    if (isLoading) return <p>Loading...</p>;
+    if (isError) return <p>Error: {error.message}</p>;
+
     return (
         <>
-            <Line data={chartData} />
-            <Container maxWidth="sm" style={{ marginTop: 30, marginBottom: 30 }}>
+            <Container maxWidth='lg'>
+                <Line
+                    data={chartData}
+                    options={chartOptions}
+                    ref={chartRef}
+                />
+
+                <Button onClick={handleResetZoom} variant="outlined">
+                    Reset Zoom
+                </Button>
+            </Container>
+
+
+
+            <Container maxWidth="sm" style={styles.container}>
                 <Grid
                     container
                     justifyContent="center"
@@ -84,8 +133,10 @@ const LineChart = () => {
             </Container>
         </>
     );
+
 }
 
 const MemoizedLineChart = React.memo(LineChart);
 
 export default MemoizedLineChart;
+
