@@ -1,4 +1,5 @@
 import LineChart from "./components/LineChart";
+import './config/chartConfig';
 import {
   QueryClient,
   QueryClientProvider,
