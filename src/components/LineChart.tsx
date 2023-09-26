@@ -54,8 +54,8 @@ const LineChart = () => {
                     pinch: {
                         enabled: true
                     },
-                    mode: 'xy',
-                }
+                    mode: 'xy'
+                } as const
             }
         }
     };
