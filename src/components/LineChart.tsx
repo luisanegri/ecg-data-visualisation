@@ -10,10 +10,11 @@ import {
     Legend
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import zoomPlugin from 'chartjs-plugin-zoom';
+import { Button, Container, Grid } from '@mui/material';
 
 import useECGData from '../hooks/useECGData';
 import { ECGDataItem } from '../types/ECGDataTypes';
-import { Button, Container, Grid } from '@mui/material';
 
 ChartJS.register(
     CategoryScale,
@@ -22,21 +23,13 @@ ChartJS.register(
     LineElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    zoomPlugin
 );
 
 const LineChart = () => {
     const [page, setPage] = useState(0);
-    const [zoomLevel, setZoomLevel] = useState(50);
     const { ecgData, isLoading, isError, error, hasMore, isFetching, isPreviousData } = useECGData(page);
-
-    const handleZoomIn = () => {
-        setZoomLevel(prev => Math.max(prev - 10, 10));
-    };
-
-    const handleZoomOut = () => {
-        setZoomLevel(prev => prev + 10);
-    };
 
     const chartData = {
         labels: (ecgData as ECGDataItem[])?.map(item => item.Time),
@@ -49,7 +42,22 @@ const LineChart = () => {
                 pointRadius: 0,
             }
         ]
+    };
 
+    const chartOptions = {
+        plugins: {
+            zoom: {
+                zoom: {
+                    wheel: {
+                        enabled: true,
+                    },
+                    pinch: {
+                        enabled: true
+                    },
+                    mode: 'xy',
+                }
+            }
+        }
     };
 
     const styles = {
@@ -64,33 +72,9 @@ const LineChart = () => {
 
     return (
         <>
-            <Container maxWidth="xs" style={styles.container}>
-                <Grid
-                    container
-                    justifyContent="center"
-                    alignItems="center"
-                    spacing={2}
-                >
-                    <Button onClick={handleZoomIn} variant="outlined">
-                        Zoom In
-                    </Button>
-                    <Button onClick={handleZoomOut} variant="outlined">
-                        Zoom Out
-                    </Button>
-                </Grid>
-            </Container>
-
             <Line
                 data={chartData}
-                options={{
-                    scales: {
-                        x: {
-                            ticks: {
-                                maxTicksLimit: zoomLevel
-                            }
-                        }
-                    }
-                }}
+                options={chartOptions}
             />
 
             <Container maxWidth="sm" style={styles.container}>
