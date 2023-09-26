@@ -13,6 +13,7 @@ import { Line } from 'react-chartjs-2';
 
 import useECGData from '../hooks/useECGData';
 import { ECGDataItem } from '../types/ECGDataTypes';
+import { Button, Container, Grid } from '@mui/material';
 
 ChartJS.register(
     CategoryScale,
@@ -45,28 +46,43 @@ const LineChart = () => {
     };
 
     return (
-        <div>
+        <>
             <Line data={chartData} />
-            <div>
-                <button
-                    onClick={() => setPage(prev => Math.max(prev - 1, 0))}
-                    disabled={page === 0}
+            <Container maxWidth="sm" style={{ marginTop: 30, marginBottom: 30 }}>
+                <Grid
+                    container
+                    justifyContent="center"
+                    alignItems="center"
+                    spacing={2}
                 >
-                    Previous
-                </button>
-                <button
-                    onClick={() => {
-                        if (!isPreviousData && hasMore) {
-                            setPage(prev => prev + 1);
-                        }
-                    }}
-                    disabled={isPreviousData || !hasMore}
-                >
-                    Next
-                </button>
-                {isFetching ? <span> Loading...</span> : null}{' '}
-            </div>
-        </div>
+                    <Grid item>
+                        <Button
+                            onClick={() => setPage(prev => Math.max(prev - 1, 0))}
+                            disabled={page === 0}
+                            variant="outlined"
+                        >
+                            Previous
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button
+                            onClick={() => {
+                                if (!isPreviousData && hasMore) {
+                                    setPage(prev => prev + 1);
+                                }
+                            }}
+                            disabled={isPreviousData || !hasMore}
+                            variant="contained"
+                        >
+                            Next
+                        </Button>
+                    </Grid>
+                </Grid>
+                <Grid container justifyContent="center">
+                    {isFetching ? <span>Loading...</span> : null}
+                </Grid>
+            </Container>
+        </>
     );
 }
 
