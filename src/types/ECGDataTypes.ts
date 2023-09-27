@@ -1,4 +1,3 @@
-import { AxiosError } from 'axios';
 import { ParseError } from 'papaparse';
 
 export type ECGDataItem = {
@@ -14,8 +13,12 @@ export type UseECGDataReturnType = {
     ecgData: ECGDataItem[] | null;
     isLoading: boolean;
     isError: boolean;
-    error: AxiosError | ParseError;
+    error: ParseError;
     hasMore: boolean;
     isFetching: boolean;
     isPreviousData: boolean;
+};
+
+export type ParsedDataResult = {
+    data: ECGDataItem[]; hasMore: boolean
 };
