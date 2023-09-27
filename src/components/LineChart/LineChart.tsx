@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { Line } from 'reactchartjs2';
 import { Button, Container, Grid } from '@mui/material';
 
@@ -21,14 +21,18 @@ const LineChart = () => {
         }
     };
 
+    const processedECGData = useMemo(() => {
+        return getChartData(ecgData || []);
+    }, [ecgData]);
+
     if (isLoading) return <Loading />
     if (isError) return <Error message={error.message} />
 
     return (
         <>
-            <Container maxWidth='lg'>
+            <Container maxWidth='lg' className={styles.container}>
                 <Line
-                    data={getChartData(ecgData || [])}
+                    data={processedECGData}
                     options={chartOptions}
                     // TODO: fix issue with typescript notrecognising the resetZoom method.
                     ref={chartRef as any}
