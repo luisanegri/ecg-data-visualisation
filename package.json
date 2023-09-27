@@ -13,7 +13,6 @@
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.10",
     "@tanstack/reactquery": "^4.35.3",
-    "axios": "^1.5.0",
     "chart.js": "^4.4.0",
     "chartjspluginzoom": "^2.0.1",
     "intersectionobserver": "^0.12.2",
