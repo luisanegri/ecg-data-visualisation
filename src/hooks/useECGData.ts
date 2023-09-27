@@ -6,8 +6,8 @@ import { ECGDataItem } from '../types/ECGDataTypes';
 import { handlePapaParseError } from '../utils/errorHandlers';
 import { ParsedDataResult } from '../types/ECGDataTypes';
 
-// const sampleECGDataPath = '/data/small_data.txt'
-const ECGDataPath = '/data/142905_data_data.txt'
+const sampleECGDataPath = '/data/small_data.txt'
+// const ECGDataPath = '/data/142905_data_data.txt'
 
 function parseCSVData(page = 0, limit = 1000): Promise<ParsedDataResult> {
     return new Promise((resolve) => {
@@ -18,7 +18,7 @@ function parseCSVData(page = 0, limit = 1000): Promise<ParsedDataResult> {
             resolve({ data: flattenedData.slice(page * limit, (page + 1) * limit), hasMore });
         };
 
-        Papa.parse(ECGDataPath, {
+        Papa.parse(sampleECGDataPath, {
             download: true,
             header: true,
             dynamicTyping: true,
