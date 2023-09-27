@@ -36,8 +36,19 @@ ECG Data Visualizer is a web application designed for visualizing ECG data in re
     ```
 ## 
 
- For Reviewers:
- **Dataset Requirement:** The necessary dataset for this project, named `142905_data_data.txt`, should already be provided by you.
- **Setup:** Ensure to place the dataset in the `/public/data` directory of the project. The application relies on this specific data file being in this location to function correctly.
+ 
+
+
+ 
+
+ 
+ 
+ 
+   
+   
+   
+   
+ 
+
 
 
