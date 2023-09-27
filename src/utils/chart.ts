@@ -12,6 +12,28 @@ export const getChartData = (ecgData: ECGDataItem[]) => ({
 });
 
 export const chartOptions = {
+    scales: {
+        x: {
+            title: {
+                display: true,
+                text: 'Time (s)',
+                color: '#333',
+                font: {
+                    size: 14,
+                }
+            },
+        },
+        y: {
+            title: {
+                display: true,
+                text: 'Voltage (mV)',
+                color: '#333',
+                font: {
+                    size: 14,
+                }
+            },
+        }
+    },
     plugins: {
         zoom: {
             pan: {
