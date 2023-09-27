@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import { UseECGDataReturnType } from '../types/ECGDataTypes';
 import { ECGDataItem } from '../types/ECGDataTypes';
+import { handleAxiosError, handlePapaParseError } from '../utils/errorHandlers';
 
 const sampleECGDataPath = '/data/small_data.txt'
 // const ECGDataPath = '/data/14-29-05_data_data.txt'
@@ -19,7 +20,7 @@ const fetchData = async (page = 0, limit = 50) => {
         });
 
         if (parsedData.errors.length > 0) {
-            throw new Error('Error parsing data');
+            throw new Error(handlePapaParseError(parsedData.errors));
         } else {
             // Slice data for pagination
             const startIdx = page * limit;
@@ -32,7 +33,11 @@ const fetchData = async (page = 0, limit = 50) => {
             return { data: pageData, hasMore: hasMore };
         }
     } catch (error) {
-        throw new Error('Error fetching or parsing data');
+        if (axios.isAxiosError(error)) {
+            throw new Error(handleAxiosError(error));
+        }
+        // handle other types of errors
+        throw error;
     }
 };
 
@@ -40,11 +45,8 @@ const useECGData = (page = 0): UseECGDataReturnType => {
     const { data, isLoading, isError, error, isFetching, isPreviousData } = useQuery(['ECGData', page], () => fetchData(page), {
         keepPreviousData: true,
         onSuccess: () => {
-            console.log('Data fetched successfully')
+            console.log('Data fetched successfully', data)
         },
-        onError: (error) => {
-            console.log('Error fetching data', error)
-        }
     });
 
     return {
