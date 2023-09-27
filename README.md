@@ -1,27 +1,43 @@
-# React + TypeScript + Vite
+# ECG Data Visualizer 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+ECG Data Visualizer is a web application designed for visualizing ECG data in realtime. The application facilitates navigation through ECG data points, offering zoom functionalities and data pagination.
 
- [@vitejs/pluginreact](https://github.com/vitejs/vitepluginreact/blob/main/packages/pluginreact/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
- [@vitejs/pluginreactswc](https://github.com/vitejs/vitepluginreactswc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Technologies Used
 
-## Expanding the ESLint configuration
+ React
+ Vite
+ TypeScript
+ ReactQuery
+ Chart.js
+ Papa Parse
+ MaterialUI
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Installation
 
- Configure the toplevel `parserOptions` property like this:
+ Prerequisites
+ Node.js (v14 or later recommended)
+ npm (v7 or later recommended)
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+ Installation Steps
+1. Clone the repository
+    ```shell
+    git clone https://github.com/yourusername/ecgdatavisualizer.git
+    cd ecgdatavisualizer
+    ```
+2. Install dependencies
+    ```shell
+    npm install
+    ```
+3. Start the development server
+    ```shell
+    npm run dev
+    ```
+## 
 
- Replace `plugin:@typescripteslint/recommended` to `plugin:@typescripteslint/recommendedtypechecked` or `plugin:@typescripteslint/stricttypechecked`
- Optionally add `plugin:@typescripteslint/stylistictypechecked`
- Install [eslintpluginreact](https://github.com/jsxeslint/eslintpluginreact) and add `plugin:react/recommended` & `plugin:react/jsxruntime` to the `extends` list
+ For Reviewers:
+ **Dataset Requirement:** The necessary dataset for this project, named `142905_data_data.txt`, should already be provided by you.
+ **Setup:** Ensure to place the dataset in the `/public/data` directory of the project. The application relies on this specific data file being in this location to function correctly.
+
+
