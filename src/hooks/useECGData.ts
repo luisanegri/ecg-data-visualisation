@@ -1,48 +1,52 @@
 import Papa from 'papaparse';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 
 import { UseECGDataReturnType } from '../types/ECGDataTypes';
 import { ECGDataItem } from '../types/ECGDataTypes';
-import { handleAxiosError, handlePapaParseError } from '../utils/errorHandlers';
+import { handlePapaParseError } from '../utils/errorHandlers';
+import { ParsedDataResult } from '../types/ECGDataTypes';
 
-const sampleECGDataPath = '/data/small_data.txt'
-// const ECGDataPath = '/data/14-29-05_data_data.txt'
+// const sampleECGDataPath = '/data/small_data.txt'
+const ECGDataPath = '/data/14-29-05_data_data.txt'
 
-const fetchData = async (page = 0, limit = 50) => {
-    try {
-        const response = await axios.get(sampleECGDataPath);
+function parseCSVData(page = 0, limit = 1000): Promise<ParsedDataResult> {
+    return new Promise((resolve) => {
+        const dataChunks: ECGDataItem[] = [];
 
-        // Parse the CSV data using PapaParse
-        const parsedData = Papa.parse(response.data, {
+        const resolveData = (chunks: ECGDataItem[], page: number, limit: number, hasMore: boolean) => {
+            const flattenedData = chunks.flat();
+            resolve({ data: flattenedData.slice(page * limit, (page + 1) * limit), hasMore });
+        };
+
+        Papa.parse(ECGDataPath, {
+            download: true,
             header: true,
             dynamicTyping: true,
+            chunk: (results, parser) => {
+                console.log('Chunk received:', results.data.length, 'rows');
+                dataChunks.push(results.data);
+
+                const totalRows = dataChunks.flat().length;
+                console.log('Total data received so far:', totalRows);
+
+                if (totalRows >= (page + 1) * limit) {
+                    resolveData(dataChunks, page, limit, true);
+                    parser.abort();
+                }
+            },
+            complete: () => {
+                console.log('Parsing complete');
+                resolveData(dataChunks, page, limit, false);
+            },
+            error: (error) => {
+                handlePapaParseError(error.errors);
+            }
         });
-
-        if (parsedData.errors.length > 0) {
-            throw new Error(handlePapaParseError(parsedData.errors));
-        } else {
-            // Slice data for pagination
-            const startIdx = page * limit;
-            const endIdx = startIdx + limit;
-            const pageData = parsedData.data.slice(startIdx, endIdx);
-
-            // Determine if there's more data for the next page
-            const hasMore = parsedData.data.length > endIdx;
-
-            return { data: pageData, hasMore: hasMore };
-        }
-    } catch (error) {
-        if (axios.isAxiosError(error)) {
-            throw new Error(handleAxiosError(error));
-        }
-        // handle other types of errors
-        throw error;
-    }
-};
+    });
+}
 
 const useECGData = (page = 0): UseECGDataReturnType => {
-    const { data, isLoading, isError, error, isFetching, isPreviousData } = useQuery(['ECGData', page], () => fetchData(page), {
+    const { data, isLoading, isError, error, isFetching, isPreviousData } = useQuery(['ECGData', page], () => parseCSVData(page), {
         keepPreviousData: true,
         staleTime: 1000 * 60 * 5,
         cacheTime: 1000 * 60 * 10,
