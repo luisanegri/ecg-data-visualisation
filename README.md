@@ -21,16 +21,25 @@ ECG Data Visualizer is a web application designed for visualizing ECG data in re
  npm (v7 or later recommended)
 
  Installation Steps
-1. Clone the repository
+
+1. **Download and Extract:**
+     Download the `ecgdatavisualizer.zip` file.
+     Extract the zip file to your preferred location on your computer.
+
+2. **Navigate to Project Directory:**
+     Open a terminal or command prompt.
+     Navigate to the directory where you extracted the project.
+
     ```shell
-    git clone https://github.com/yourusername/ecgdatavisualizer.git
-    cd ecgdatavisualizer
+    cd pathtoyourdirectory/ecgdatavisualizer
     ```
-2. Install dependencies
+
+3. **Install Dependencies:**
     ```shell
     npm install
     ```
-3. Start the development server
+
+4. **Start the Development Server:**
     ```shell
     npm run dev
     ```
