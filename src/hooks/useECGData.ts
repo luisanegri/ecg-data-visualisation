@@ -44,6 +44,8 @@ const fetchData = async (page = 0, limit = 50) => {
 const useECGData = (page = 0): UseECGDataReturnType => {
     const { data, isLoading, isError, error, isFetching, isPreviousData } = useQuery(['ECGData', page], () => fetchData(page), {
         keepPreviousData: true,
+        staleTime: 1000 * 60 * 5,
+        cacheTime: 1000 * 60 * 10,
         onSuccess: () => {
             console.log('Data fetched successfully', data)
         },
